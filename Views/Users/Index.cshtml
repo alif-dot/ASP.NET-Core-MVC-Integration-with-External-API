@@ -1,0 +1,29 @@
+﻿<!-- Views/User/Index.cshtml -->
+@model UserModel
+
+<h2>Get User by Phone</h2>
+
+<form asp-controller="User" asp-action="GetUserByPhone" method="post">
+    <div>
+        <label for="PhoneNumber">Phone Number:</label>
+        <input type="text" id="PhoneNumber" name="phoneNumber" required />
+    </div>
+    <div>
+        <button type="submit">Get User</button>
+    </div>
+</form>
+
+@if (Model != null)
+{
+    <div>
+        <h3>User Data:</h3>
+        <p>Id: @Model.Id</p>
+    </div>
+}
+
+@if (ViewBag.Error != null)
+{
+    <div>
+        <p>Error: @ViewBag.Error</p>
+    </div>
+}

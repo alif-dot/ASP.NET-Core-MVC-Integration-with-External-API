@@ -1,0 +1,70 @@
+﻿@using System.Text.Json
+
+@{
+    ViewData["Title"] = "User Data";
+}
+
+<h2>User Data</h2>
+
+<div>
+    <form asp-controller="Users" asp-action="ViewPoint" method="post" id="userForm">
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="text" id="phoneNumber" name="phoneNumber" />
+        <button type="submit">Get User Data</button>
+    </form>
+</div>
+
+@* @if (ViewData["UserData"] != null)
+{
+    <div id="userData">
+        <p>Available Points: @(ViewData["UserData"] as UserData).available_points</p>
+    </div>
+} *@
+
+@if (!string.IsNullOrEmpty(ViewBag.Error))
+{
+    <div id="error">@ViewBag.Error</div>
+}
+
+<p id="points"></p>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        var userData = @Html.Raw(JsonSerializer.Serialize(ViewData["UserData"]));
+        $(document).ready(function () {
+            $("#phoneNumber").on('keyup', function () {
+                var phoneNumber = $(this).val();
+
+                if (phoneNumber.length === 11) {
+                    $.ajax({
+                        url: '/Users/ViewPoint',
+                        data: { phoneNumber: phoneNumber },
+                        type: 'post',
+                        success: function (data) {
+                            try {
+                                if (userData && userData.available_points !== undefined) {
+                                    $("#points").text("Available Points: " + userData.available_points);
+                                } else {
+                                    $("#error").empty();
+                                    $("#points").text("Available Points: " + data.available_points);
+                                }
+                            } catch (e) {
+                                console.error('Failed to response:', e);
+                                $("#error").text('Unexpected response from the server.');
+                                $("#points").empty();
+                            }
+                        },
+                        error: function () {
+                            $("#error").text('Failed to fetch user data.');
+                            $("#points").empty();
+                        }
+                    });
+                } else {
+                    $("#error").text('Invalid Number');
+                    $("#points").empty();
+                }
+            });
+        });
+    </script>
+}

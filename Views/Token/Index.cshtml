@@ -1,0 +1,30 @@
+﻿@model TokenRequest
+
+<h2>Login</h2>
+
+<form asp-controller="Token" asp-action="GenerateToken" method="post">
+    <div>
+        <label for="UserName">Username:</label>
+        <input type="text" id="UserName" name="UserName" required />
+    </div>
+    <div>
+        <label for="Password">Password:</label>
+        <input type="password" id="Password" name="Password" required />
+    </div>
+    <div>
+        <button type="submit">Login</button>
+    </div>
+</form>
+
+@if (ViewBag.Token != null)
+{
+    <script>
+        // Store token in local storage
+        localStorage.setItem('token', '@ViewBag.Token');
+
+        // Redirect to another page
+        window.location.href = '/Users/ViewPoint';
+    </script>
+}
+
+<p>@ViewBag.Token</p>
